@@ -73,7 +73,7 @@ void saveschedule() {
         s.drinks = "Soda";
         s.seatinglayout = 5;
 
-        // Write the schedule details to the file
+        
         outfile << s.name << " " << s.minage << " " << s.price << " "
                 << s.time << " " << s.durationinmin << " "
                 << s.foodnsnacks << " " << s.drinks << " "
