@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <ctime>
 #include <cctype>
-using namespace std;  // Use the standard namespace to avoid having to prefix everything with std::
+using namespace std; 
 
 struct schedule {
     string name;
@@ -62,9 +62,9 @@ void saveschedule() {
     if (!outfile) {
         cout << "Your file does not exist ";
     } else {
-        schedule s;  // Create an instance of the schedule struct
-        // You need to assign values to the struct before writing to the file
-        s.name = "Movie Schedule";  // example assignment
+        schedule s;  // 
+        
+        s.name = "Movie Schedule"; 
         s.minage = 18;
         s.price = 20;
         s.time = 120;
