@@ -5,10 +5,9 @@
 #include<ctime>
 #include<cctype>
 struct schedule{
-   
-
-
     string name;
+    string foodnsnacks;
+    string drinks;
     int minage;
     int price;
     int time;
