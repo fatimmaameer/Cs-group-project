@@ -15,7 +15,7 @@ struct schedule
     int durationinmin;
     string foodnsnacks;
     string drinks;
-    int seatinglayout;
+    int rows, column;
 };
 
 struct reservation
@@ -32,12 +32,20 @@ const int MAX_SCHEDULE = 100;
 const int MAX_RESERVATION = 100;
 const int MAX_ROWS = 100;
 const int MAX_COLUMN = 100;
-
-// void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules file
-void saveschedule();
+const int MIN_ROW = 0;
+const int MIN_COLUMN = 0;
+// void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules filevoid saveschedule();
+// functions
 void displaymenu();
 void managerpassword();
+void seatinglayout(int sccheduleindex, int row, int column);
+// global variables
+char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
+schedule schedules[MAX_SCHEDULE];
+int schedulecount = 0;
 
+reservation reservations[MAX_RESERVATION];
+int reservationCount = 0;
 int main()
 {
     displaymenu();
@@ -100,14 +108,26 @@ void saveschedule()
         getline(cin, s.foodnsnacks);
         cout << "Enter drinks you want in the menu: ";
         getline(cin, s.drinks);
-        cout << "Enter seating layout: ";
-        cin >> s.seatinglayout;
+        cout << "Enter rows: ";
+        cin >> s.rows;
+        cout << "Enter column: ";
+        cin >> s.column;
+        seatinglayout(schedulecount, s.rows, s.column);
         outfile << s.name << " " << s.minage << " " << s.price
                 << " " << s.time << " " << s.durationinmin
                 << " " << s.foodnsnacks << " " << s.drinks
-                << " " << s.seatinglayout << endl;
-    }
+                << " " << s.rows << " " << s.column << endl;
+        schedulecount++;
+        
+         // Write the seating layout to the file 
+         for (int i = 0; i < s.rows; i++) 
+         { for (int j = 0; j < s.column; j++) 
+         { 
+            outfile << seating[schedulecount][i][j] << " "; 
+         } outfile << endl;
+    } schedulecount++;
     outfile.close();
+}
 }
 void managerpassword()
 {
@@ -132,13 +152,44 @@ void managerpassword()
         cout << "your fav clr\n";
         cin >> favclr;
         {
-            if (dogname == actdogname && favclr == actfavclr){
+            if (dogname == actdogname && favclr == actfavclr)
+            {
                 saveschedule();
-                }
+            }
         }
     }
     else
     {
         cout << "sorry you are not manager dont waste time go and do your work";
     }
+}
+void seatinglayout(int scheduleindex, int rows, int column)
+{
+    
+
+    if (rows < MIN_ROW || rows > MAX_ROWS || column < MIN_COLUMN || column > MAX_COLUMN)
+    {
+        cout << "invalid input ";
+    }
+    else
+    {
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < column; ++j)
+            {
+                seating[scheduleindex][i][j] = '.';
+            }
+        }
+        
+    }
+    for (int i = 0; i < rows; ++i){
+        {
+            for (int j = 0; j < column; ++j)
+            {
+                cout<<seating[scheduleindex][i][j] << ' ';
+            }
+            cout<<endl;
+        }
+
+}
 }
