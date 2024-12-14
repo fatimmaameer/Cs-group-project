@@ -78,7 +78,41 @@ void displaymenu()
         break;
     }
 }
-
+void managerpassword()
+{
+    int password, actualpassword;
+    actualpassword = 12345;
+    string actdogname, bubble, blue, actfavclr, dogname, favclr;
+    actdogname = "bubble";
+    actfavclr = "blue";
+    cout <<"enter you password ";
+    cin >> password;
+    if (password == actualpassword)
+    {    
+        cout<<"wow your password is correct.\n";
+        cout<<"carry on.\n ";
+        saveschedule();
+    }
+    else if (password != actualpassword)
+    {
+        cout<<"forget password!!!!! \n ";
+        cout<<"try answering these question so that we can make sure you are manager \n ";
+        cout<<"your dog name\n";
+        cin >> dogname;
+        cout<<"your fav clr\n";
+        cin >> favclr;
+        {
+            if (dogname == actdogname && favclr == actfavclr)
+            {
+                saveschedule();
+            }
+        }
+    }
+    else
+    {
+        cout<<"sorry you are not manager dont waste time go and do your work";
+    }
+}
 void saveschedule()
 {
     ofstream outfile;
@@ -117,7 +151,7 @@ void saveschedule()
                 << " " << s.time << " " << s.durationinmin
                 << " " << s.foodnsnacks << " " << s.drinks
                 << " " << s.rows << " " << s.column << endl;
-        //sschedulecount++;
+        
         
          // Write the seating layout to the file 
          for (int i = 0; i < s.rows; i++) 
@@ -129,41 +163,7 @@ void saveschedule()
     outfile.close();
 }
 }
-void managerpassword()
-{
-    int password, actualpassword;
-    actualpassword = 12345;
-    string actdogname, bubble, blue, actfavclr, dogname, favclr;
-    actdogname = "bubble";
-    actfavclr = "blue";
-    cout <<"enter you password ";
-    cin >> password;
-    if (password == actualpassword)
-    {    
-        cout<<"wow your password is correct.\n";
-        cout<<"carry on.\n ";
-        saveschedule();
-    }
-    else if (password != actualpassword)
-    {
-        cout<<"forget password!!!!! \n ";
-        cout<<"try answering these question so that we can make sure you are manager \n ";
-        cout<<"your dog name\n";
-        cin >> dogname;
-        cout<<"your fav clr\n";
-        cin >> favclr;
-        {
-            if (dogname == actdogname && favclr == actfavclr)
-            {
-                saveschedule();
-            }
-        }
-    }
-    else
-    {
-        cout<<"sorry you are not manager dont waste time go and do your work";
-    }
-}
+
 void seatinglayout(int scheduleindex, int rows, int column)
 {
     
@@ -192,5 +192,5 @@ void seatinglayout(int scheduleindex, int rows, int column)
             cout<<endl;
         }
 
-}
+}scheduleindex++;
 }
