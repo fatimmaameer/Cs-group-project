@@ -4,9 +4,10 @@
 #include <iomanip>
 #include <ctime>
 #include <cctype>
-using namespace std; 
+using namespace std;
 
-struct schedule {
+struct schedule
+{
     string name;
     int minage;
     int price;
@@ -17,7 +18,8 @@ struct schedule {
     int seatinglayout;
 };
 
-struct reservation {
+struct reservation
+{
     int chooseschadule;
     int userid;
     int age;
@@ -27,20 +29,26 @@ struct reservation {
     int time; // time when you reserve seat;
 };
 
-void loadschedule();
+void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules file
 void saveschedule();
-
-int main() {
+void displaymenu();
+int main()
+{
+    displaymenu();
+}
+void displaymenu()
+{
     int choice;
     cout << "enter your designation please !\n";
     cout << "1= manager\n";
     cout << "2= operator\n";
-    cout << "3= exit \n" ;
+    cout << "3= exit \n";
     cin >> choice;
-    switch (choice) {
+    switch (choice)
+    {
     case 1:
         cout << "1= I'm a manager\n";
-        saveschedule();
+        saveschedule(); // manager menu
         break;
     case 2:
         cout << "2= I'm an operator\n";
@@ -52,31 +60,44 @@ int main() {
         cout << "invalid choice ";
         break;
     }
-    return 0;
 }
 
-void saveschedule() {
+void saveschedule()
+{
     ofstream outfile;
-    outfile.open("file.txt");
+    outfile.open("filee.txt");
 
-    if (!outfile) {
+    if (!outfile)
+    {
         cout << "Your file does not exist ";
-    } else {
-        schedule s;  // 
-        
-        s.name = "Movie Schedule"; 
-        s.minage = 18;
-        s.price = 20;
-        s.time = 120;
-        s.durationinmin = 90;
-        s.foodnsnacks = "Popcorn";
-        s.drinks = "Soda";
-        s.seatinglayout = 5;
-
-        
-        outfile << s.name << " " << s.minage << " " << s.price << " "
-                << s.time << " " << s.durationinmin << " "
-                << s.foodnsnacks << " " << s.drinks << " "
-                << s.seatinglayout << endl;
     }
-}
+    else
+    {
+
+        schedule s;
+        cout << "Enter name: ";
+        cin.ignore(); 
+        getline(cin, s.name);
+        cout << "Enter minimum age required: ";
+        cin >> s.minage;
+        cout << "Enter price: ";
+        cin >> s.price;
+        cout << "Enter time: ";
+        cin >> s.time;
+        cout << "Enter duration in minutes: ";
+        cin >> s.durationinmin;
+        cout << "Enter food or snack you want in the menu: ";
+        cin.ignore(); 
+        getline(cin, s.foodnsnacks);
+        cout << "Enter drinks you want in the menu: "; 
+        getline(cin, s.drinks);
+        cout << "Enter seating layout: "; 
+        cin >> s.seatinglayout; 
+        outfile << s.name << " " << s.minage << " " << s.price 
+                << " " << s.time << " " << s.durationinmin 
+                << " " << s.foodnsnacks << " " << s.drinks 
+                << " " << s.seatinglayout << endl;
+                 } outfile.close();
+    }
+
+    // mamnager menu(){    saveschedule()}
