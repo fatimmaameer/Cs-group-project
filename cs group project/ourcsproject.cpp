@@ -28,17 +28,27 @@ struct reservation
     int column;
     int time; // time when you reserve seat;
 };
+const int MAX_SCHEDULE = 100;
+const int MAX_RESERVATION = 100;
+const int MAX_ROWS = 100;
+const int MAX_COLUMN=100;
 
-void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules file
+//void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules file
 void saveschedule();
 void displaymenu();
+void managerpassword();
+
+
 int main()
 {
     displaymenu();
+    return 0;
 }
-void displaymenu()
-{
-    int choice;
+
+
+void displaymenu(){
+    int  choice;
+    
     cout << "enter your designation please !\n";
     cout << "1= manager\n";
     cout << "2= operator\n";
@@ -48,7 +58,7 @@ void displaymenu()
     {
     case 1:
         cout << "1= I'm a manager\n";
-        saveschedule(); // manager menu
+        managerpassword();
         break;
     case 2:
         cout << "2= I'm an operator\n";
@@ -99,5 +109,33 @@ void saveschedule()
                 << " " << s.seatinglayout << endl;
                  } outfile.close();
     }
-
-    // mamnager menu(){    saveschedule()}
+void managerpassword()
+    {
+        int password, actualpassword;
+        actualpassword = 12345;
+        string actdogname, bubble,blue,actfavclr, dogname, favclr;
+        actdogname = bubble;
+        actfavclr = blue;
+        cout << "enter you password ";
+        cin >> password;
+        if (password == actualpassword)
+        {
+            cout << "carry on.\n ";
+             saveschedule();
+        }
+        else
+        {
+            cout << "forget password!!!!! \n ";
+            cout << "try answering these question so that we can make sure you are manager ";
+            getline(cin, dogname);
+            getline(cin, favclr) ;
+            if (dogname == actdogname && favclr == actfavclr)
+            {
+                saveschedule();
+            }
+            else
+            {
+                cout << "sorry you are not manager dont waste time go and do your work";
+            }
+        }
+    }
