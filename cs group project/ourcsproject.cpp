@@ -38,6 +38,8 @@ const int MIN_COLUMN = 0;
 // functions
 void displaymenu();
 void managerpassword();
+void reserveschedule();
+void operatorpassword();
 void seatinglayout(int sccheduleindex, int row, int column);
 // global variables
 char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
@@ -46,6 +48,7 @@ int schedulecount = 0;
 
 reservation reservations[MAX_RESERVATION];
 int reservationCount = 0;
+
 int main()
 {
     displaymenu();
@@ -69,6 +72,7 @@ void displaymenu()
         break;
     case 2:
         cout << "2= I'm an operator\n";
+        operatorpassword();
         break;
     case 3:
         cout << "3= I want to exit \n";
@@ -193,4 +197,103 @@ void seatinglayout(int scheduleindex, int rows, int column)
         }
 
 }scheduleindex++;
+
+}
+void operatorpassword();
+{
+{
+    int password, actualpassword;
+    actualpassword = 2468;
+    string actfvrtfood, fvrtfood,biryani, bentley, fvrtcar, actfvrtcar;
+    actfvrtfood = "biryani";
+    actfavclr = "bentley";
+    cout <<"enter you password ";
+    cin >> password;
+    if (password == actualpassword)
+    {    
+        cout<<"wow your password is correct.\n";
+        cout<<"carry on.\n ";
+        reserveschedule();
+    }
+    else if (password != actualpassword)
+    {
+        cout<<"forget password!!!!! \n ";
+        cout<<"try answering these question so that we can make sure you are manager \n ";
+        cout<<"your favourite food \n";
+        cin >> fvrtcar;
+        cout<<"your favourite car \n";
+        cin >> fvrtcar;
+        {
+            if (fvrtfood == actfvrtfood && favcar == actfvrtcar)
+            {
+                reserveschedule();
+            }
+        }
+    }
+    else
+    {
+        cout<<"sorry you are not manager dont waste time go and do your work";
+    }
+}
+}
+void reserveschedule()
+{
+    if (scheduleCount == 0) {
+        cout << "No schedules available. Please ask the manager to set up a schedule first.\n";
+        return;
+    }
+    while (true) {
+        enhancedVisualization("Operator Menu", '=');
+        cout << "Available Schedules:\n";
+        for (int i = 0; i < scheduleCount; ++i) {
+            cout << i + 1 << ". " << schedules[i].name << " (" 
+                 << (schedules[i].isMovie ? "Cinema" : "Bus Service") << ")\n";
+        }
+        cout << scheduleCount + 1 << ". Return to Main Menu\n";
+        cout << "Enter your choice: ";
+        int choice;
+        cin >> choice;
+
+        if (choice == scheduleCount + 1) return;
+
+        if (choice < 1 || choice > scheduleCount) {
+            cout << "Invalid choice. Please try again.\n";
+            continue;
+        }
+
+        int scheduleIndex = choice - 1;
+        seatinglayout(scheduleIndex);
+
+        while (true) {
+            cout << "1. View Seating Layout\n"
+                 << "2. Reserve a Seat\n"
+                 << "3. Cancel a Reservation\n"
+                 << "4. Return to Schedule Selection\n";
+            cout << "Enter your choice: ";
+            int opChoice;
+            cin >> opChoice;
+
+            switch (opChoice) {
+            case 1:
+                displaySeating(scheduleIndex);
+                break;
+            case 2:
+                reserveSeat(scheduleIndex);
+                saveSeating(scheduleIndex);
+                break;
+            case 3:
+                cancelReservation(scheduleIndex);
+                saveSeating(scheduleIndex);
+                break;
+            case 4:
+                return;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+            }
+        }
+    }
+
+
+
+
 }
