@@ -126,9 +126,11 @@ void managerpassword()
         else
         {
             cout << "forget password!!!!! \n ";
-            cout << "try answering these question so that we can make sure you are manager ";
-            getline(cin, dogname);
-            getline(cin, favclr) ;
+            cout << "try answering these question so that we can make sure you are manager \n ";
+            cout<<"your dog name\n";
+            cin>>dogname;
+            cout<<" your fav clr\n";
+            cin>>favclr;
             if (dogname == actdogname && favclr == actfavclr)
             {
                 saveschedule();
