@@ -199,42 +199,41 @@ void seatinglayout(int scheduleindex, int rows, int column)
 }scheduleindex++;
 
 }
-void operatorpassword();
-{
+void operatorpassword()
 {
     int password, actualpassword;
     actualpassword = 2468;
-    string actfvrtfood, fvrtfood,biryani, bentley, fvrtcar, actfvrtcar;
-    actfvrtfood = "biryani";
-    actfavclr = "bentley";
-    cout <<"enter you password ";
+    string actfvrtfood = "biryani";
+    string actfvrtcar = "bentley";
+    string fvrtfood, fvrtcar;
+
+    cout << "Enter your password: ";
     cin >> password;
+
     if (password == actualpassword)
-    {    
-        cout<<"wow your password is correct.\n";
-        cout<<"carry on.\n ";
-        reserveschedule();
-    }
-    else if (password != actualpassword)
     {
-        cout<<"forget password!!!!! \n ";
-        cout<<"try answering these question so that we can make sure you are manager \n ";
-        cout<<"your favourite food \n";
-        cin >> fvrtcar;
-        cout<<"your favourite car \n";
-        cin >> fvrtcar;
-        {
-            if (fvrtfood == actfvrtfood && favcar == actfvrtcar)
-            {
-                reserveschedule();
-            }
-        }
+        cout << "Wow, your password is correct.\n";
+        cout << "Carry on.\n";
+        reserveschedule();
     }
     else
     {
-        cout<<"sorry you are not manager dont waste time go and do your work";
+        cout << "Forgot password? \n";
+        cout << "Try answering these questions to verify your identity: \n";
+        cout << "Your favourite food: ";
+        cin >> fvrtfood;
+        cout << "Your favourite car: ";
+        cin >> fvrtcar;
+
+        if (fvrtfood == actfvrtfood && fvrtcar == actfvrtcar)
+        {
+            reserveschedule();
+        }
+        else
+        {
+            cout << "Sorry, verification failed. You are not authorized.\n";
+        }
     }
-}
 }
 void reserveschedule()
 {
