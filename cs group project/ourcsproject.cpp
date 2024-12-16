@@ -10,6 +10,7 @@ struct schedule
 {
     string name;
     int minage;
+    bool isMovie;
     int price;
     int time;
     int durationinmin;
@@ -34,6 +35,7 @@ const int MAX_ROWS = 100;
 const int MAX_COLUMN = 100;
 const int MIN_ROW = 0;
 const int MIN_COLUMN = 0;
+int scheduleCount = 0;
 // void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules filevoid saveschedule();
 // functions
 void displaymenu();
@@ -41,6 +43,18 @@ void managerpassword();
 void reserveschedule();
 void operatorpassword();
 void seatinglayout(int sccheduleindex, int row, int column);
+void enhancedVisualization(const string &text, char borderChar);
+void saveschedule();
+void displaySeating(int scheduleIndex);
+  
+void reserveSeat(int scheduleIndex);
+     
+void saveSeating(int scheduleIndex);
+     
+void cancelReservation (int scheduleIndex);
+
+
+
 // global variables
 char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
 schedule schedules[MAX_SCHEDULE];
@@ -199,7 +213,6 @@ void seatinglayout(int scheduleindex, int rows, int column)
 }scheduleindex++;
 
 }
-
 void operatorpassword()
 {
     int password, actualpassword;
@@ -236,7 +249,6 @@ void operatorpassword()
         }
     }
 }
-
 void reserveschedule()
 {
     if (scheduleCount == 0) {
@@ -263,7 +275,7 @@ void reserveschedule()
         }
 
         int scheduleIndex = choice - 1;
-        seatinglayout(scheduleIndex);
+        
 
         while (true) {
             cout << "1. View Seating Layout\n"
@@ -298,3 +310,10 @@ void reserveschedule()
 
 
 }
+void enhancedVisualization(const string &text, char borderChar) {
+    string border(text.length(), borderChar);
+    cout << border << endl
+         << text << endl
+         << border << endl;
+}
+
