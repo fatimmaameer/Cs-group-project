@@ -250,13 +250,16 @@ void operatorpassword()
     }
 }
 void reserveschedule()
-{
+{   
+    //check if any scheudles are available
     if (scheduleCount == 0) {
         cout << "No schedules available. Please ask the manager to set up a schedule first.\n";
         return;
     }
     while (true) {
+        //display a title for operator menu
         enhancedVisualization("Operator Menu", '=');
+        //Display the list of available schedules
         cout << "Available Schedules:\n";
         for (int i = 0; i < scheduleCount; ++i) {
             cout << i + 1 << ". " << schedules[i].name << " (" 
@@ -268,7 +271,7 @@ void reserveschedule()
         cin >> choice;
 
         if (choice == scheduleCount + 1) return;
-
+        //validate the selected schedule
         if (choice < 1 || choice > scheduleCount) {
             cout << "Invalid choice. Please try again.\n";
             continue;
@@ -278,28 +281,28 @@ void reserveschedule()
         
 
         while (true) {
-            cout << "1. View Seating Layout\n"
-                 << "2. Reserve a Seat\n"
-                 << "3. Cancel a Reservation\n"
-                 << "4. Return to Schedule Selection\n";
+            cout << "1. View Seating Layout\n" //display the current sitting layout
+                 << "2. Reserve a Seat\n"  //allowing reserving in specific seat
+                 << "3. Cancel a Reservation\n" //allow canceling an existing reservation
+                 << "4. Return to Schedule Selection\n"; //go back to the schedule list
             cout << "Enter your choice: ";
             int opChoice;
             cin >> opChoice;
-
+            //  user choices
             switch (opChoice) {
             case 1:
-                displaySeating(scheduleIndex);
+                displaySeating(scheduleIndex); //show the seating layout for schedule
                 break;
             case 2:
-                reserveSeat(scheduleIndex);
-                saveSeating(scheduleIndex);
+                reserveSeat(scheduleIndex); //reserve seat
+                saveSeating(scheduleIndex); // saving a updated seat information
                 break;
             case 3:
-                cancelReservation(scheduleIndex);
-                saveSeating(scheduleIndex);
+                cancelReservation(scheduleIndex); //Cancel reservation
+                saveSeating(scheduleIndex); //save updating seat info
                 break;
             case 4:
-                return;
+                return; //exit to schedule selection menu
             default:
                 cout << "Invalid choice. Please try again.\n";
             }
