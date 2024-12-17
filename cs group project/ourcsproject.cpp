@@ -38,6 +38,8 @@ const int MIN_COLUMN = 0;
 // functions
 void displaymenu();
 void managerpassword();
+void reserveschedule();
+void operatorpassword();
 void seatinglayout(int sccheduleindex, int row, int column);
 void saveschedule();
 // void ranumwhenseatreserved();
@@ -48,6 +50,7 @@ int schedulecount = 0;
 
 reservation reservations[MAX_RESERVATION];
 int reservationCount = 0;
+
 int main()
 {
     displaymenu();
@@ -71,6 +74,7 @@ void displaymenu()
         break;
     case 2:
         cout << "2= I'm an operator\n";
+        operatorpassword();
         break;
     case 3:
         cout << "3= I want to exit \n";
