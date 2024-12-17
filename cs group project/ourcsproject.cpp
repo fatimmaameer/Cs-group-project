@@ -5,11 +5,12 @@
 #include <ctime>
 #include <cctype>
 using namespace std;
-
+//structure for a schedule, which stores movie or event details
 struct schedule
 {
     string name;
     int minage;
+    bool isMovie;
     int price;
     int time;
     int durationinmin;
@@ -28,22 +29,28 @@ struct reservation
     int column;
     int time; // time when you reserve seat;
 };
+// Constants for max values in seating, schedule, and reservation
 const int MAX_SCHEDULE = 100;
 const int MAX_RESERVATION = 100;
 const int MAX_ROWS = 100;
 const int MAX_COLUMN = 100;
 const int MIN_ROW = 0;
 const int MIN_COLUMN = 0;
+int scheduleCount = 0;
 // void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules filevoid saveschedule();
 // functions
-void displaymenu();
+void displaymenu();// Display the main menu to the user
 void managerpassword();
 void reserveschedule();
 void operatorpassword();
 void seatinglayout(int sccheduleindex, int row, int column);
+void enhancedVisualization(const string &text, char borderChar);// Function to enhance visualization with borders
 void saveschedule();
-// void ranumwhenseatreserved();
-//  global variables
+void displaySeating(int scheduleIndex);
+void reserveSeat(int scheduleIndex);  
+void saveSeating(int scheduleIndex);// Save the seating arrangement after reservation   
+void cancelReservation (int scheduleIndex);
+// global variables
 char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
 schedule schedules[MAX_SCHEDULE];
 int schedulecount = 0;
@@ -53,12 +60,13 @@ int reservationCount = 0;
 
 int main()
 {
-    displaymenu();
+    displaymenu();  // Call the main menu function to begin the user interaction
     return 0;
 }
-
+// Displays the main menu for the user to select their role
 void displaymenu()
 {
+    
     int choice;
 
     cout << "enter your designation please !\n";
@@ -66,15 +74,16 @@ void displaymenu()
     cout << "2= operator\n";
     cout << "3= exit \n";
     cin >> choice;
+     // Based on user choice, call the respective login function or exit
     switch (choice)
     {
     case 1:
         cout << "1= I'm a manager\n";
-        managerpassword();
+        managerpassword(); // Call manager login and password verification
         break;
     case 2:
         cout << "2= I'm an operator\n";
-        operatorpassword();
+        operatorpassword(); // Call operator login and password verification
         break;
     case 3:
         cout << "3= I want to exit \n";
@@ -86,6 +95,7 @@ void displaymenu()
 }
 void managerpassword()
 {
+    // Manages manager login and verifies their identity
     int password, actualpassword;
     actualpassword = 12345;
     string actdogname, bubble, blue, actfavclr, dogname, favclr;
@@ -94,16 +104,17 @@ void managerpassword()
     cout << "enter you password ";
     cin >> password;
     if (password == actualpassword)
-    {
-        cout << "wow your password is correct.\n";
-        cout << "carry on.\n ";
+    {    
+        cout<<"wow your password is correct.\n";
+        cout<<"carry on.\n ";
         saveschedule();
     }
     else if (password != actualpassword)
     {
-        cout << "forget password!!!!! \n ";
-        cout << "try answering these question so that we can make sure you are manager \n ";
-        cout << "your dog name\n";
+         // If password is incorrect, ask for security questions
+        cout<<"forget password!!!!! \n ";
+        cout<<"try answering these question so that we can make sure you are manager \n ";
+        cout<<"your dog name\n";
         cin >> dogname;
         cout << "your fav clr\n";
         cin >> favclr;
@@ -122,7 +133,7 @@ void managerpassword()
 void saveschedule()
 {
     ofstream outfile;
-    outfile.open("filee.txt");
+    outfile.open("filee.txt"); // Open the file to save schedule details
 
     if (!outfile)
     {
@@ -132,7 +143,7 @@ void saveschedule()
     {
 
         schedule s;
-        cout << "Enter name: ";
+        cout<<"Enter name: ";
         cin.ignore();
         getline(cin, s.name);
         cout << "Enter minimum age required: ";
@@ -153,12 +164,13 @@ void saveschedule()
         cout << "Enter column: ";
         cin >> s.column;
         seatinglayout(schedulecount, s.rows, s.column);
+        // Save schedule details to file
         outfile << s.name << " " << s.minage << " " << s.price
                 << " " << s.time << " " << s.durationinmin  //in this file just wrote name age time rows number and column number etc
                 << " " << s.foodnsnacks << " " << s.drinks
                 << " " << s.rows << " " << s.column << endl;
-
-        outfile.close();
+        
+         outfile.close();
         // Write the seating layout to the file named seating layout this is the separate file
         ofstream ffile;
         ffile.open("seatinglayout.txt");
@@ -177,10 +189,11 @@ void saveschedule()
                 
         ffile.close();
     }
-}
-
+         
+        
 void seatinglayout(int scheduleindex, int rows, int column)
 {
+    // Initialize seating arrangement for the schedule
 
     if (rows < MIN_ROW || rows > MAX_ROWS || column < MIN_COLUMN || column > MAX_COLUMN)
     {
@@ -188,26 +201,124 @@ void seatinglayout(int scheduleindex, int rows, int column)
     }
     else
     {
+         // Set all seats as available ('*')
         for (int i = 0; i < rows; ++i)
         {
             for (int j = 0; j < column; ++j)
             {
-                seating[scheduleindex][i][j] = '*';
+                seating[scheduleindex][i][j] = '*';  // Set all seats as available ('*')
             }
         }
     }
     for (int i = 0; i < rows; ++i)
     {
         {
+            // Display seating arrangement for the operator
             for (int j = 0; j < column; ++j)
             {
                 cout << seating[scheduleindex][i][j] << ' ';
             }
-            cout << endl;
+            cout<<endl;
+        }
+
+}scheduleindex++;
+
+}
+void operatorpassword()
+{
+    int password, actualpassword;
+    actualpassword = 2468;
+    string actfvrtfood = "biryani";
+    string actfvrtcar = "bentley";
+    string fvrtfood, fvrtcar;
+
+    cout << "Enter your password: ";
+    cin >> password;
+
+    if (password == actualpassword)
+    {
+        cout << "Wow, your password is correct.\n";
+        cout << "Carry on.\n";
+        reserveschedule();
+    }
+    else
+    {
+        cout << "Forgot password? \n";
+        cout << "Try answering these questions to verify your identity: \n";
+        cout << "Your favourite food: ";
+        cin >> fvrtfood;
+        cout << "Your favourite car: ";
+        cin >> fvrtcar;
+
+        if (fvrtfood == actfvrtfood && fvrtcar == actfvrtcar)
+        {
+            reserveschedule();
+        }
+        else
+        {
+            cout << "Sorry, verification failed. You are not authorized.\n";
         }
     }
-    scheduleindex++;
 }
-// void ranumwhenseatreserved(){
+void reserveschedule()
+{
+     //check if any scheudles are available
+    if (scheduleCount == 0) {
+        cout << "No schedules available. Please ask the manager to set up a schedule first.\n";
+        return;
+    }
+    while (true) {
+        enhancedVisualization("Operator Menu", '=');
+        cout << "Available Schedules:\n";
+        for (int i = 0; i < scheduleCount; ++i) {
+            cout << i + 1 << ". " << schedules[i].name << " (" 
+                 << (schedules[i].isMovie ? "Cinema" : "Bus Service") << ")\n";
+        }
+        cout << scheduleCount + 1 << ". Return to Main Menu\n";
+        cout << "Enter your choice: ";
+        int choice;
+        cin >> choice;
 
-//}
+        if (choice == scheduleCount + 1) return;
+
+        if (choice < 1 || choice > scheduleCount) {
+            cout << "Invalid choice. Please try again.\n";
+            continue;
+        }
+
+        int scheduleIndex = choice - 1;
+        seatinglayout(scheduleIndex);
+
+        while (true) {
+            cout << "1. View Seating Layout\n"
+                 << "2. Reserve a Seat\n"
+                 << "3. Cancel a Reservation\n"
+                 << "4. Return to Schedule Selection\n";
+            cout << "Enter your choice: ";
+            int opChoice;
+            cin >> opChoice;
+
+            switch (opChoice) {
+            case 1:
+                displaySeating(scheduleIndex);
+                break;
+            case 2:
+                reserveSeat(scheduleIndex);
+                saveSeating(scheduleIndex);
+                break;
+            case 3:
+                cancelReservation(scheduleIndex);
+                saveSeating(scheduleIndex);
+                break;
+            case 4:
+                return;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+            }
+        }
+    }
+
+
+
+
+}
