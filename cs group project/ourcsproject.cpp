@@ -329,48 +329,59 @@ void enhancedVisualization(const string &text, char borderChar) {
          << border << endl;
 }
 
-
-
-// Reserve a seat
+   // Function to reserve a seat
 void reserveSeat(int scheduleIndex) {
-    
-
-    const schedule &selectedSchedule = schedules[scheduleIndex];
+    const schedule &schedule = schedules[scheduleIndex];  // Get the schedule
     int userID, row, col;
     char gender;
 
-    // Prompt user for input details
-    cout << "Enter your User ID: ";
+    
+    cout << "Enter your user ID: ";
     cin >> userID;
+
+
     cout << "Enter your gender (M/F): ";
     cin >> gender;
-    gender = toupper(gender);
-
+    gender = toupper(gender);  
 
     if (gender != 'M' && gender != 'F') {
         cout << "Invalid gender. Reservation canceled.\n";
         return;
     }
 
-    
+   
     cout << "Enter seat row and column (e.g., 1 2): ";
     cin >> row >> col;
-    row--; col--; 
 
-    // Validate input and seat availability
-    if (row < 0 || row >= selectedSchedule.rows || col < 0 || col >= selectedSchedule.column) {
-        cout << "Invalid seat selection.\n";
-        return;
-    }
-    if (!validateInput(scheduleIndex, row, col, userID, gender))
-     return;
+    
+    row--; 
+    col--; 
 
-     if (!validateInput(scheduleIndex, row, col))
-        return;
-
-    seating[scheduleIndex][row][col] = '/'; // Mark seat as reserved
-    reservations[reservationCount++] = {userID, gender, row + 1, col + 1}; // Store reservation details
-    cout << "Seat successfully reserved!\n";
 }
+void cancelReservation(int scheduleIndex) {
+    const schedule &schedule = schedules[scheduleIndex];
+    int userID;
+    cout << "Enter your user ID to cancel your reservation: ";
+    cin >> userID;
 
+    
+    bool reservationFound = false;
+    for (int i = 0; i < reservationCount; ++i) {
+      
+        if (reservations[i].chooseschadule == scheduleIndex && reservations[i].userid == userID) {
+            int row = reservations[i].row - 1; 
+            int col = reservations[i].column - 1; 
+            seating[scheduleIndex][row][col] = '*';
 
+            reservations[i] = reservations[--reservationCount];  
+
+            cout << "Reservation canceled successfully.\n";
+            reservationFound = true;
+            break;
+        }
+    }
+
+    if (!reservationFound) {
+        cout << "No reservation found with the provided user ID.\n";
+    }
+}
