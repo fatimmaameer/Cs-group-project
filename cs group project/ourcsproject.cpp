@@ -47,6 +47,7 @@ void seatinglayout(int sccheduleindex, int row, int column);// Create seating la
 void enhancedVisualization(const string &text, char borderChar);// Function to enhance visualization with borders
 void saveschedule();
 void displaySeating(int scheduleIndex);
+
 void reserveSeat(int scheduleIndex);  
 void saveSeating(int scheduleIndex);// Save the seating arrangement after reservation   
 void cancelReservation (int scheduleIndex);
@@ -328,5 +329,48 @@ void enhancedVisualization(const string &text, char borderChar) {
          << border << endl;
 }
 
+
+
+// Reserve a seat
+void reserveSeat(int scheduleIndex) {
+    
+
+    const schedule &selectedSchedule = schedules[scheduleIndex];
+    int userID, row, col;
+    char gender;
+
+    // Prompt user for input details
+    cout << "Enter your User ID: ";
+    cin >> userID;
+    cout << "Enter your gender (M/F): ";
+    cin >> gender;
+    gender = toupper(gender);
+
+
+    if (gender != 'M' && gender != 'F') {
+        cout << "Invalid gender. Reservation canceled.\n";
+        return;
+    }
+
+    
+    cout << "Enter seat row and column (e.g., 1 2): ";
+    cin >> row >> col;
+    row--; col--; 
+
+    // Validate input and seat availability
+    if (row < 0 || row >= selectedSchedule.rows || col < 0 || col >= selectedSchedule.column) {
+        cout << "Invalid seat selection.\n";
+        return;
+    }
+    if (!validateInput(scheduleIndex, row, col, userID, gender))
+     return;
+
+     if (!validateInput(scheduleIndex, row, col))
+        return;
+
+    seating[scheduleIndex][row][col] = '/'; // Mark seat as reserved
+    reservations[reservationCount++] = {userID, gender, row + 1, col + 1}; // Store reservation details
+    cout << "Seat successfully reserved!\n";
+}
 
 
