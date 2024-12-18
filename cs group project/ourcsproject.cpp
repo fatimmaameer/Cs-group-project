@@ -44,12 +44,12 @@ void managerpassword();
 void reserveschedule();
 void operatorpassword();
 void seatinglayout(int sccheduleindex, int row, int column);
-void enhancedVisualization(const string &text, char borderChar); // Function to enhance visualization with borders
+void enhancedVisualization(const string &text, char borderChar);// Function to enhance visualization with borders
 void saveschedule();
 void displaySeating(int scheduleIndex);
-void reserveSeat(int scheduleIndex);
-void saveSeating(int scheduleIndex); // Save the seating arrangement after reservation
-void cancelReservation(int scheduleIndex);
+void reserveSeat(int scheduleIndex);  
+void saveSeating(int scheduleIndex);// Save the seating arrangement after reservation   
+void cancelReservation (int scheduleIndex);
 // global variables
 char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
 schedule schedules[MAX_SCHEDULE];
@@ -101,22 +101,22 @@ void managerpassword()
     string actdogname, bubble, blue, actfavclr, dogname, favclr;
     actdogname = "bubble";
     actfavclr = "blue";
-    cout << "enter you password ";
+    cout <<"enter you password ";
     cin >> password;
     if (password == actualpassword)
-    {
-        cout << "wow your password is correct.\n";
-        cout << "carry on.\n ";
-        saveschedule();
+    {    
+        cout<<"wow your password is correct.\n";
+        cout<<"carry on.\n ";
+        saveschedule();  // If password is correct, allow the manager to save a schedule
     }
     else if (password != actualpassword)
     {
-        // If password is incorrect, ask for security questions
-        cout << "forget password!!!!! \n ";
-        cout << "try answering these question so that we can make sure you are manager \n ";
-        cout << "your dog name\n";
+         // If password is incorrect, ask for security questions
+        cout<<"forget password!!!!! \n ";
+        cout<<"try answering these question so that we can make sure you are manager \n ";
+        cout<<"your dog name\n";
         cin >> dogname;
-        cout << "your fav clr\n";
+        cout<<"your fav clr\n";
         cin >> favclr;
         {
             if (dogname == actdogname && favclr == actfavclr)
@@ -127,7 +127,7 @@ void managerpassword()
     }
     else
     {
-        cout << "sorry you are not manager dont waste time go and do your work";
+        cout<<"sorry you are not manager dont waste time go and do your work";
     }
 }
 void saveschedule()
@@ -142,31 +142,31 @@ void saveschedule()
     else
     {
 
-        schedule s;
-        cout << "Enter name: ";
+        schedule s; // Prompt user for schedule details
+        cout<<"Enter name: ";
         cin.ignore();
         getline(cin, s.name);
-        cout << "Enter minimum age required: ";
+        cout<<"Enter minimum age required: ";
         cin >> s.minage;
-        cout << "Enter price: ";
+        cout<<"Enter price: ";
         cin >> s.price;
-        cout << "Enter time: ";
+        cout<<"Enter time: ";
         cin >> s.time;
-        cout << "Enter duration in minutes: ";
+        cout<<"Enter duration in minutes: ";
         cin >> s.durationinmin;
-        cout << "Enter food or snack you want in the menu: ";
+        cout<<"Enter food or snack you want in the menu: ";
         cin.ignore();
         getline(cin, s.foodnsnacks);
-        cout << "Enter drinks you want in the menu: ";
+        cout<<"Enter drinks you want in the menu: ";
         getline(cin, s.drinks);
-        cout << "Enter rows: ";
+        cout<<"Enter rows: ";
         cin >> s.rows;
-        cout << "Enter column: ";
+        cout<<"Enter column: ";
         cin >> s.column;
         seatinglayout(schedulecount, s.rows, s.column);
         // Save schedule details to file
         outfile << s.name << " " << s.minage << " " << s.price
-                << " " << s.time << " " << s.durationinmin // in this file just wrote name age time rows number and column number etc
+                << " " << s.time << " " << s.durationinmin  //in this file just wrote name age time rows number and column number etc
                 << " " << s.foodnsnacks << " " << s.drinks
                 << " " << s.rows << " " << s.column << endl;
 
@@ -256,8 +256,8 @@ void saveschedule()
         }
     }
     void reserveschedule()
-    {
-        // check if any scheudles are available
+    {   
+       // check if any scheudles are available
         if (scheduleCount == 0)
         {
             cout << "No schedules available. Please ask the manager to set up a schedule first.\n";
@@ -265,13 +265,16 @@ void saveschedule()
         }
         while (true)
         {
+        //display a title for operator menu
             enhancedVisualization("Operator Menu", '=');
+        //Display the list of available schedules
             cout << "Available Schedules:\n";
             for (int i = 0; i < scheduleCount; ++i)
             {
                 cout << i + 1 << ". " << schedules[i].name << " ("
                      << (schedules[i].isMovie ? "Cinema" : "Bus Service") << ")\n";
             }
+        //if operator choose to exit menu
             cout << scheduleCount + 1 << ". Return to Main Menu\n";
             cout << "Enter your choice: ";
             int choice;
