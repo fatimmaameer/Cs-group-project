@@ -135,6 +135,7 @@ void saveschedule()
 {
     ofstream outfile;
     outfile.open("filee.txt");
+    char choice;
 
     if (!outfile)
     {
@@ -147,6 +148,9 @@ void saveschedule()
         cout<<"Enter name: ";
         cin.ignore();
         getline(cin, s.name);
+        cout << " Is it a movie?";
+        cin >> choice;
+        s.isMovie = (choice == 'C' || choice == 'c');
         cout<<"Enter minimum age required: ";
         cin >> s.minage;
         cout<<"Enter price: ";
@@ -165,7 +169,7 @@ void saveschedule()
         cout<<"Enter column: ";
         cin >> s.column;
         seatinglayout(schedulecount, s.rows, s.column);
-        outfile << s.name << " " << s.minage << " " << s.price
+        outfile << s.name << " " << s.minage << " " << s.isMovie << " "<< s.price
                 << " " << s.time << " " << s.durationinmin
                 << " " << s.foodnsnacks << " " << s.drinks
                 << " " << s.rows << " " << s.column << endl;
@@ -173,7 +177,8 @@ void saveschedule()
         
          // Write the seating layout to the file 
          for (int i = 0; i < s.rows; i++) 
-         { for (int j = 0; j < s.column; j++) 
+         {
+             for (int j = 0; j < s.column; j++) 
          { 
             outfile << seating[schedulecount][i][j] << " "; 
          } outfile << endl;
@@ -291,7 +296,8 @@ void reserveschedule()
             //  user choices
             switch (opChoice) {
             case 1:
-                displaySeating(scheduleIndex); //show the seating layout for schedule
+                displaySeating(scheduleIndex); //will displaySeating by using schedulecount intitalixzed at line xyz adn will
+                // use xyz logic to perform
                 break;
             case 2:
                 reserveSeat(scheduleIndex); //reserve seat
