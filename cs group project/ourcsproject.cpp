@@ -36,7 +36,7 @@ const int MAX_ROWS = 100;
 const int MAX_COLUMN = 100;
 const int MIN_ROW = 0;
 const int MIN_COLUMN = 0;
-int scheduleCount = 0;
+int inscheduleCount = 0;
 // void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules filevoid saveschedule();
 // functions
 void displaymenu(); // Display the main menu to the user
@@ -387,4 +387,28 @@ void displaySeating(int scheduleIndex) {
         }
         cout << endl;
     }
+}
+void cancelReservation()
+{
+    void cancelReservation(int scheduleIndex) {
+    int row, col;
+
+    cout << "Enter the row and column of the seat to cancel (0-" 
+         << schedules[scheduleIndex].rows - 1 
+         << " for rows and columns): ";
+    cin >> row >> col;
+
+    if (row < 0 || row >= schedules[scheduleIndex].rows || col < 0 || col >= schedules[scheduleIndex].columns) {
+        cout << "Invalid seat selection. Please try again.\n";
+        return;
+    }
+
+    if (seating[scheduleIndex][row][col] == '*') {
+        cout << "This seat is already available.\n";
+        return;
+    }
+
+   
+}
+
 }
