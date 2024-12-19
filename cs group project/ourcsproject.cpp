@@ -323,7 +323,7 @@ void saveschedule()
             }
         }
     }
-void reserve seat(){
+void reserveSeat() {
     int row, col;
     char gender;
 
@@ -333,20 +333,58 @@ void reserve seat(){
          << " for rows and columns): ";
     cin >> row >> col;
 
-    if (row < 0 || row >= schedules[scheduleIndex].rows || col < 0 || col >= schedules[scheduleIndex].column) {
+    // Check if the seat selection is valid
+    if (row < 0 || row >= schedules[scheduleIndex].rows || col < 0 || col >= schedules[scheduleIndex].columns) {
         cout << "Invalid seat selection.\n";
         return;
     }
 
+    // Check if the seat is already reserved
     if (seating[scheduleIndex][row][col] != '.') {
         cout << "Seat already reserved.\n";
         return;
     }
 
+    // Check gender compatibility with adjacent seats
+    for (int i = -1; i <= 1; ++i) {
+        for (int j = -1; j <= 1; ++j) {
+            int adjRow = row + i;
+            int adjCol = col + j;
+
+            // Skip out-of-bounds or the seat itself
+            if ((i == 0 && j == 0) || adjRow < 0 || adjRow >= schedules[scheduleIndex].rows ||
+                adjCol < 0 || adjCol >= schedules[scheduleIndex].columns) {
+                continue;
+            }
+
+            // Check if the adjacent seat has an incompatible gender
+            if ((gender == 'M' || gender == 'm') && seating[scheduleIndex][adjRow][adjCol] == '*') {
+                cout << "Cannot reserve. A male and a female cannot sit next to each other.\n";
+                return;
+            }
+
+            if ((gender == 'F' || gender == 'f') && seating[scheduleIndex][adjRow][adjCol] == '\\') {
+                cout << "Cannot reserve. A male and a female cannot sit next to each other.\n";
+                return;
+            }
+        }
+    }
+
+    // Reserve the seat
     randomNumbers[scheduleIndex][row][col] = rand() % 10 + 1; // Generate random number
     seating[scheduleIndex][row][col] = (gender == 'M' || gender == 'm') ? '\\' : '*'; // Gender-based symbol
 
     cout << "Seat reserved successfully! Random number for this seat: " << randomNumbers[scheduleIndex][row][col] << "\n";
     displaySeating(scheduleIndex);
+}
 
+// Displays the seating layout of a schedule
+void displaySeating(int scheduleIndex) {
+    cout << "Seating Layout:\n";
+    for (int i = 0; i < schedules[scheduleIndex].rows; ++i) {
+        for (int j = 0; j < schedules[scheduleIndex].columns; ++j) {
+            cout << seating[scheduleIndex][i][j] << ' ';
+        }
+        cout << endl;
+    }
 }
