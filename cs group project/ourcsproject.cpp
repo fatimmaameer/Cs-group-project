@@ -36,7 +36,7 @@ const int MAX_ROWS = 100;
 const int MAX_COLUMN = 100;
 const int MIN_ROW = 0;
 const int MIN_COLUMN = 0;
-int inscheduleCount = 0;
+int scheduleCount = 0;
 // void loadschedule(); // to be defined with paramreters (), will load the struct of the movie from the schedules filevoid saveschedule();
 // functions
 void displaymenu(); // Display the main menu to the user
