@@ -53,7 +53,7 @@ void cancelReservation(int scheduleIndex);
 // global variables
 char seating[MAX_SCHEDULE][MAX_ROWS][MAX_COLUMN];
 schedule schedules[MAX_SCHEDULE];
-int schedulecount = 0;
+//int schedulecount = 0;
 
 reservation reservations[MAX_RESERVATION];
 int reservationCount = 0;
@@ -126,18 +126,29 @@ void managerpassword()
 }
 
 void saveschedule()
-{
+{   
+    schedule s; // Prompt user for schedule details
+    if (scheduleCount >= MAX_SCHEDULE) {
+        cout << "Maximum schedule limit reached.\n";
+        return;
+    }
+
+    //schedule &sschedule= schedules[scheduleCount];
+    cout << "Are you setting up for a cinema or bus service? (C/B): ";
+    char choice;
+    cin >> choice;
+    s.isMovie = (choice == 'C' || choice == 'c');
+
+    cout << "Enter the " << (s.isMovie ? "movie" : "bus") << " name: ";
+    cin.ignore();
+    getline(cin, s.name);
     ofstream outfile;
     outfile.open("filee.txt");
-    char choice;
-
     if (!outfile)
     {
         cout << "Your file does not exist.\n";
         return; // Exit function if file could not be opened
     }
-
-    schedule s; // Prompt user for schedule details
     cout << "Enter name: ";
     cin.ignore();
     getline(cin, s.name);
@@ -222,7 +233,7 @@ void seatinglayout(int scheduleIndex, int rows, int column)
             cout << seating[scheduleIndex][i][j] << ' ';
         }
         cout << endl;
-    }
+    } displaymenu();
 }
 
 void operatorpassword()
@@ -337,7 +348,7 @@ void reserveSeat(int scheduleIndex)
         return;
     }
 
-    seating[scheduleIndex][row][col] = (gender == 'M' || gender == 'm') ? '/' : '*';
+    seating[scheduleIndex][row][col] = (gender == 'M' || gender == 'm') ? '/' : '.';
     cout << "Seat reserved successfully!\n";
 }
 
