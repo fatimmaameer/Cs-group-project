@@ -132,8 +132,6 @@ void saveschedule()
         cout << "Maximum schedule limit reached.\n";
         return;
     }
-
-    //schedule &sschedule= schedules[scheduleCount];
     cout << "Are you setting up for a cinema or bus service? (C/B): ";
     char choice;
     cin >> choice;
@@ -170,7 +168,7 @@ void saveschedule()
     cout << "Enter columns: ";
     cin >> s.column;
 
-    // Initialize the seating layout before saving schedule details
+    // Initialize the seating layout before saving schedule details moreover this will show seatinglayout on console
     seatinglayout(scheduleCount, s.rows, s.column);
 
     // Save schedule details to file
@@ -333,7 +331,7 @@ void reserveschedule()
     }
 }
 
-void reserveSeat(int scheduleIndex)
+void reserveSeat(int scheduleIndex)//this function is for rrserving seat
 {
     int row, col;
     char gender;
@@ -349,6 +347,7 @@ void reserveSeat(int scheduleIndex)
     }
 
     seating[scheduleIndex][row][col] = (gender == 'M' || gender == 'm') ? '/' : '.';
+    displaySeating(scheduleIndex);//this will show seat which is reserved by female or male
     cout << "Seat reserved successfully!\n";
 }
 
