@@ -39,11 +39,13 @@ const int MIN_COLUMN = 0;
 int scheduleCount = 0;
 
 // functions
-void displaymenu(); // Display the main menu to the user
+void displaymenu();         // Display the main menu to the user
 void managerpassword();
+void loadSchedules();
+void loadSeating(int scheduleIndex);
 void reserveschedule();
 void operatorpassword();
-void seatinglayout(int sccheduleindex, int rows, int column);
+void initializeSeating(int sccheduleindex, int rows, int column);
 void enhancedVisualization(const string &text, char borderChar); // Function to enhance visualization with borders
 void saveschedule();
 void displaySeating(int scheduleIndex);
@@ -60,9 +62,48 @@ int reservationCount = 0;
 
 int main()
 {
-    displaymenu(); // Call the main menu function to begin the user interaction
+    while (true)
+    {
+        displaymenu(); // Call the main menu function to begin the user interaction
+        char continueChoice;
+        cout << "Do you want to continue with more operations? (Y/N): ";
+        cin >> continueChoice;
+        if (continueChoice == 'N' || continueChoice == 'n')
+            break; // Exit the loop if user chooses not to continue
+    }
     return 0;
 }
+void loadSchedules() {
+    ifstream inFile("schedules.txt");
+    if (!inFile) return;
+
+    while (scheduleCount < MAX_SCHEDULE && inFile >> ws, getline(inFile, schedules[scheduleCount].name)) {
+        schedule &currentScedule = schedules[scheduleCount];
+        getline (inFile, currentScedule.name);
+        inFile >> currentScedule.name >> currentScedule.minage >> currentScedule.price 
+               >> currentScedule.time >> currentScedule.durationinmin >> currentScedule.foodnsnacks >> currentScedule.drinks >> currentScedule.rows >> currentScedule.column >> currentScedule.isMovie;
+        inFile.ignore();
+        scheduleCount++;
+    }
+    inFile.close();
+}
+
+void loadSeating(int scheduleIndex) {
+    const schedule &schedule = schedules[scheduleIndex];
+    ifstream inFile("seatinglayout_" + to_string(scheduleIndex + 1) + ".txt");
+    if (!inFile) {
+        initializeSeating(scheduleIndex, schedule.rows, schedule.column);
+        return;
+    }
+
+    for (int i = 0; i < schedule.rows; ++i) {
+        for (int j = 0; j < schedule.column; ++j) {
+            inFile >> seating[scheduleIndex][i][j];
+        }
+    }
+    inFile.close();
+}
+
 // Displays the main menu for the user to select their role
 void displaymenu()
 {
@@ -128,7 +169,8 @@ void managerpassword()
 void saveschedule()
 {
     ofstream outfile;
-    outfile.open("filee.txt");
+    string filename = "schedules.txt"; // Create a unique file for each schedule
+    outfile.open(filename);
     char choice;
 
     if (!outfile)
@@ -136,16 +178,21 @@ void saveschedule()
         cout << "Your file does not exist.\n";
         return; // Exit function if file could not be opened
     }
-
+    
     schedule s; // Prompt user for schedule details
-    cout << "Enter name: ";
+    cout << "Welcome to the schedule creator!\n";
+    cout << "What service do you operate? cinema or Bus?  (C/B) \n";
+    cin >> choice;
     cin.ignore();
+    choice = toupper(choice);
+    s.isMovie = ( choice = 'c');
+    cout << "Enter name of the movie/bus you want to create\n: ";
     getline(cin, s.name);
     cout << "Enter minimum age: ";
     cin >> s.minage;
     cout << "Enter price: ";
     cin >> s.price;
-    cout << "Enter time: ";
+    cout << "Enter time (in '1200' format): ";
     cin >> s.time;
     cout << "Enter duration in minutes: ";
     cin >> s.durationinmin;
@@ -159,43 +206,27 @@ void saveschedule()
     cout << "Enter columns: ";
     cin >> s.column;
 
-    // Initialize the seating layout before saving schedule details
-    seatinglayout(scheduleCount, s.rows, s.column);
+    
 
     // Save schedule details to file
     outfile << s.name << " " << s.minage << " " << s.price
             << " " << s.time << " " << s.durationinmin
             << " " << s.foodnsnacks << " " << s.drinks
-            << " " << s.rows << " " << s.column << endl;
+            << " " << s.rows << " " << s.column << s.isMovie << endl;
 
     outfile.close(); // Close schedule file
 
-    // Write the seating layout to the 'seatinglayout.txt' file
-    ofstream ffile;
-    ffile.open("seatinglayout.txt", ios::app); // Open in append mode
+    // Initialize the seating layout before saving schedule details
+    initializeSeating(scheduleCount, s.rows, s.column);
+    saveSeating(scheduleCount);
+    scheduleCount++;
 
-    if (!ffile)
-    {
-        cout << "Error opening seating layout file.\n";
-        return;
-    }
+    
 
-    // Write seating layout (initialize all seats as available with '*')
-    for (int i = 0; i < s.rows; i++)
-    {
-        for (int j = 0; j < s.column; j++)
-        {
-            seating[scheduleCount][i][j] = '*'; // Set all seats as available ('*')
-            ffile << seating[scheduleCount][i][j] << ' ';
-        }
-        ffile << endl;
-    }
-
-    ffile.close();   // Close the seating layout file
-    scheduleCount++; // Increment the schedule count after saving
+   
 }
 
-void seatinglayout(int scheduleIndex, int rows, int column)
+void initializeSeating(int scheduleIndex, int rows, int column)
 {
     // Check if the rows and columns are within valid limits
     if (rows < MIN_ROW || rows > MAX_ROWS || column < MIN_COLUMN || column > MAX_COLUMN)
@@ -213,16 +244,8 @@ void seatinglayout(int scheduleIndex, int rows, int column)
         }
     }
 
-    // Display seating arrangement for the operator
-    cout << "Seating layout for schedule: " << schedules[scheduleIndex].name << endl;
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < column; ++j)
-        {
-            cout << seating[scheduleIndex][i][j] << ' ';
-        }
-        cout << endl;
-    }
+    saveSeating(scheduleIndex);
+
 }
 
 void operatorpassword()
@@ -279,18 +302,20 @@ void reserveschedule()
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
+        
 
         if (choice == scheduleCount + 1)
-            return;
+            break;
 
         if (choice < 1 || choice > scheduleCount)
         {
             cout << "Invalid choice. Try again.\n";
             continue;
         }
-
+        
         int scheduleIndex = choice - 1;
-        seatinglayout(scheduleIndex, schedules[scheduleIndex].rows, schedules[scheduleIndex].column);
+        loadSeating(scheduleIndex);
+        initializeSeating(scheduleIndex, schedules[scheduleIndex].rows, schedules[scheduleIndex].column);
 
         while (true)
         {
@@ -328,17 +353,30 @@ void reserveSeat(int scheduleIndex)
     char gender;
     cout << "Enter your gender (M/F): ";
     cin >> gender;
-    cout << "Enter the row and column to reserve (0-" << schedules[scheduleIndex].rows - 1 << " for rows and columns): ";
+    gender = toupper(gender);
+    cout << "Enter the row and column to reserve (1-" << schedules[scheduleIndex].rows +1<< " for rows and   1-" << schedules[scheduleIndex].column<<" for columns): ";
     cin >> row >> col;
 
-    if (row >= schedules[scheduleIndex].rows || col >= schedules[scheduleIndex].column || seating[scheduleIndex][row][col] != '*')
+    if (row < 0 || row > schedules[scheduleIndex].rows || col < 0 || col > schedules[scheduleIndex].column)
     {
-        cout << "Invalid seat or already reserved. Try again.\n";
+        cout << "Invalid seat number.\n";
         return;
     }
 
-    seating[scheduleIndex][row][col] = (gender == 'M' || gender == 'm') ? '/' : '*';
+    if (row >= schedules[scheduleIndex].rows+1 || col >= schedules[scheduleIndex].column+1 )
+    {
+        cout << "Invalid seat \n";
+        return;
+    }
+    if (seating[scheduleIndex][row-1][col-1] != '*')
+    {
+         cout << "Seat already reserved. Try again.\n";
+    }
+    
+
+    seating[scheduleIndex][row-1][col-1] = (gender == 'M' || gender == 'm') ? 'M' : 'F';
     cout << "Seat reserved successfully!\n";
+    saveSeating(scheduleIndex);
 }
 
 
@@ -354,6 +392,7 @@ void displaySeating(int scheduleIndex)
         cout << endl;
     }
 }
+
 void cancelReservation(int scheduleIndex)
 {
     int row, col;
@@ -369,3 +408,30 @@ void cancelReservation(int scheduleIndex)
     seating[scheduleIndex][row][col] = '*';
     cout << "Reservation canceled successfully!\n";
 }
+
+void saveSeating(int scheduleIndex)
+{
+    // Save updated seating arrangement to the seating layout file
+    ofstream ffile;
+    string filename = "seatinglayout_" + to_string(scheduleIndex + 1) + ".txt";
+    ffile.open(filename);
+
+    if (!ffile)
+    {
+        cout << "Error opening seating layout file.\n";
+        return;
+    }
+
+    for (int i = 0; i < schedules[scheduleIndex].rows; i++)
+    {
+        for (int j = 0; j < schedules[scheduleIndex].column; j++)
+        {
+            ffile << seating[scheduleIndex][i][j] << ' ';
+        }
+        ffile << endl;
+    }
+
+    ffile.close(); // Close seating layout file after saving
+}
+
+
