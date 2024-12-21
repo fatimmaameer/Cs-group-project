@@ -55,6 +55,8 @@ void displaySeating(int scheduleIndex);
 void reserveSeat(int scheduleIndex);
 void saveSeating(int scheduleIndex);
 void cancelReservation(int scheduleIndex);
+bool checkGenderAdjacency(int scheduleIndex, int row, int col, char gender, int userid);
+void cancelSeat(int scheduleIndex, int userid);
 
 int main()
 {
@@ -325,7 +327,7 @@ void reserveschedule()
                 reserveSeat(scheduleIndex);
                 break;
             case 3:
-                cancelReservation(scheduleIndex);
+                cancelSeat(scheduleIndex, -1);
                 break;
             case 4:
                 return;
@@ -336,10 +338,36 @@ void reserveschedule()
     }
 }
 
+bool checkGenderAdjacency(int scheduleIndex, int row, int col, char gender, int userid)
+{
+    const int rowOffset[] = {-1, 1, 0, 0};
+    const int colOffset[] = {0, 0, -1, 1};
+
+    for (int i = 0; i < 4; ++i)
+    {
+        int newRow = row + rowOffset[i];
+        int newCol = col + colOffset[i];
+
+        if (newRow >= 0 && newRow < schedules[scheduleIndex].rows && newCol >= 0 && newCol < schedules[scheduleIndex].column)
+        {
+            char adjacent = seating[scheduleIndex][newRow][newCol];
+            if ((gender == 'M' && adjacent == 'F') || (gender == 'F' && adjacent == 'M'))
+            {
+                cout << "Cannot reserve adjacent to opposite gender seat.\n";
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 void reserveSeat(int scheduleIndex)
 {
-    int row, col;
+    int row, col, userid;
     char gender;
+    cout << "Enter User ID: ";
+    cin >> userid;
     cout << "Enter your gender (M/F): ";
     cin >> gender;
     gender = toupper(gender);
@@ -358,25 +386,17 @@ void reserveSeat(int scheduleIndex)
         return;
     }
 
-    seating[scheduleIndex][row - 1][col - 1] = (gender == 'M' || gender == 'm') ? 'M' : 'F';
+    if (!checkGenderAdjacency(scheduleIndex, row - 1, col - 1, gender, userid))
+    {
+        return;
+    }
+
+    seating[scheduleIndex][row - 1][col - 1] = (gender == 'M') ? 'M' : 'F';
     cout << "Seat reserved successfully!\n";
     saveSeating(scheduleIndex);
 }
 
-void displaySeating(int scheduleIndex)
-{
-    cout << "Seating Layout for " << schedules[scheduleIndex].name << ":\n";
-    for (int i = 0; i < schedules[scheduleIndex].rows; ++i)
-    {
-        for (int j = 0; j < schedules[scheduleIndex].column; ++j)
-        {
-            cout << seating[scheduleIndex][i][j] << ' ';
-        }
-        cout << endl;
-    }
-}
-
-void cancelReservation(int scheduleIndex)
+void cancelSeat(int scheduleIndex, int userid)
 {
     int row, col;
     cout << "Enter row and column of the seat to cancel (1-" << schedules[scheduleIndex].rows << " for rows and 1-" << schedules[scheduleIndex].column << " for columns): ";
@@ -391,6 +411,19 @@ void cancelReservation(int scheduleIndex)
     seating[scheduleIndex][row - 1][col - 1] = '*';
     cout << "Reservation canceled successfully!\n";
     saveSeating(scheduleIndex);
+}
+
+void displaySeating(int scheduleIndex)
+{
+    cout << "Seating Layout for " << schedules[scheduleIndex].name << ":\n";
+    for (int i = 0; i < schedules[scheduleIndex].rows; ++i)
+    {
+        for (int j = 0; j < schedules[scheduleIndex].column; ++j)
+        {
+            cout << seating[scheduleIndex][i][j] << ' ';
+        }
+        cout << endl;
+    }
 }
 
 void saveSeating(int scheduleIndex)
