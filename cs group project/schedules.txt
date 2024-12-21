@@ -1,4 +1,2 @@
-ali
-12 1200 1800 120 lays kurkure pepsi coke 13 13 1
 lord of the rings
 12 1200 2100 120 nil nil 12 12 1
