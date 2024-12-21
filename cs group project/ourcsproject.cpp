@@ -6,6 +6,11 @@
 #include <cctype>
 using namespace std;
 
+
+
+
+
+
 // Structure for a schedule, which stores movie or event details
 struct schedule
 {
@@ -57,6 +62,7 @@ void saveSeating(int scheduleIndex);
 void cancelReservation(int scheduleIndex);
 bool checkGenderAdjacency(int scheduleIndex, int row, int col, char gender, int userid);
 void cancelSeat(int scheduleIndex, int userid);
+void showHeader();
 
 int main()
 {
@@ -72,6 +78,23 @@ int main()
             break;
     }
     return 0;
+}
+void showHeader()
+{
+    system ("cls");
+    cout << "\033[1;1H"; // Move the cursor to the top-left corner.
+    cout << R"(
+  _____  ______  _____ ______ _______      __  _______ _____ ____  _   _    _______     _______ _______ ______ __  __ 
+ |  __ \|  ____|/ ____|  ____|  __ \ \    / /\|__   __|_   _/ __ \| \ | |  / ____\ \   / / ____|__   __|  ____|  \/  |
+ | |__) | |__  | (___ | |__  | |__) \ \  / /  \  | |    | || |  | |  \| | | (___  \ \_/ / (___    | |  | |__  | \  / |
+ |  _  /|  __|  \___ \|  __| |  _  / \ \/ / /\ \ | |    | || |  | | . ` |  \___ \  \   / \___ \   | |  |  __| | |\/| |
+ | | \ \| |____ ____) | |____| | \ \  \  / ____ \| |   _| || |__| | |\  |  ____) |  | |  ____) |  | |  | |____| |  | |
+ |_|  \_\______|_____/|______|_|  \_\  \/_/    \_\_|  |_____\____/|_| \_| |_____/   |_| |_____/   |_|  |______|_|  |_|
+                                                                                                                      
+                                                                                                                     
+)";
+  
+     cout << "\033[8;1H\033[J"; // Clear content below the header only.// Set cursor position to row 4, column 1, below the header.
 }
 
 void loadSchedules()
@@ -115,34 +138,55 @@ void loadSeating(int scheduleIndex)
 
 void displaymenu()
 {
-    int choice;
-    cout << "Enter your designation please!\n";
-    cout << "1)\t  Manager\n";
-    cout << "2)\t Operator\n";
-    cout << "3)\t  Exit\n";
-    cin >> choice;
-
-    switch (choice)
+   while (true)
     {
-    case 1:
-        cout << "Welcome to manager menu\n";
-        managerpassword();
-        break;
-    case 2:
-        cout << "Welcome to operator menu\n";
-        operatorpassword();
-        break;
-    case 3:
-        cout << "Exiting\n";
-        break;
-    default:
-        cout << "Invalid choice.\n";
-        break;
+        
+        showHeader();
+        cout << "\nPlease select your designation:\n";
+        cout << "-----------------------------------------\n";
+        cout << "1) Manager\n";
+        cout << "2) Operator\n";
+        cout << "3) Exit\n";
+        cout << "-----------------------------------------\n";
+        cout << "Enter your choice: ";
+        
+        int choice;
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            managerpassword();
+            break;
+        case 2:
+            showHeader();
+            cout << "\n=========================================\n";
+            cout << "           OPERATOR MENU                 \n";
+            cout << "=========================================\n";
+            operatorpassword();
+            break;
+        case 3:
+            showHeader();
+            cout << "\nThank you for using the Reservation System. Goodbye!\n";
+            return;
+        default:
+            cout << "\nInvalid choice. Please try again.\n";
+        }
     }
+
 }
 
 void managerpassword()
 {
+    
+    showHeader();
+    cout << "\n=========================================\n";
+    cout << "           MANAGER MENU                  \n";
+    cout << "=========================================\n";
+    
+    cout << "-----------------------------------------\n";
+    cout << "          MANAGER PASSWORD LOGIN         \n";
+    cout << "-----------------------------------------\n";
     int password, actualpassword = 12345;
     string actdogname = "bubble", actfavclr = "blue";
     string dogname, favclr;
@@ -152,24 +196,27 @@ void managerpassword()
 
     if (password == actualpassword)
     {
-        cout << "Password correct.\n";
+        cout << "\nPassword correct. Access granted.\n";
         saveschedule();
     }
     else
     {
-        cout << "Forgot password? Try answering these questions.\n";
-        cout << "Your dog's name: ";
+        cout << "\nForgot password? Let's verify your identity.\n";
+        cout << "-----------------------------------------\n";
+        cout << "Security Questions:\n";
+        cout << "1) What is your dog's name? ";
         cin >> dogname;
-        cout << "Your favorite color: ";
+        cout << "2) What is your favorite color? ";
         cin >> favclr;
 
         if (dogname == actdogname && favclr == actfavclr)
         {
+            cout << "\nIdentity verified. Access granted.\n";
             saveschedule();
         }
         else
         {
-            cout << "Sorry, incorrect information.\n";
+            cout << "\nSorry, couldn't verify identity\n";
         }
     }
 }
@@ -186,8 +233,12 @@ void saveschedule()
 
     schedule s;
     char choice;
-    cout << "Welcome to the schedule creator!\n";
-    cout << "What service do you operate? cinema or Bus?  (C/B) \n";
+    showHeader();
+    
+    cout << "\n=====================================================\n";
+    cout << "\n         Welcome to the schedule creator!\n";
+    cout << "\n=====================================================\n";
+    cout << "\nWhat service do you operate? cinema or Bus?  (C/B) \n";
     cin >> choice;
     cin.ignore();
     choice = toupper(choice);
@@ -195,22 +246,22 @@ void saveschedule()
 
     cout << "Enter name of the movie/bus you want to create\n: ";
     getline(cin, s.name);
-    cout << "Enter minimum age: ";
+    cout << "\nEnter minimum age: ";
     cin >> s.minage;
-    cout << "Enter price: ";
+    cout << "\nEnter price: ";
     cin >> s.price;
-    cout << "Enter time (in '1200' format): ";
+    cout << "\nEnter time (in '1200' format): ";
     cin >> s.time;
-    cout << "Enter duration in minutes: ";
+    cout << "\nEnter duration in minutes: ";
     cin >> s.durationinmin;
-    cout << "Enter food and snacks: ";
+    cout << "\nEnter food and snacks: ";
     cin.ignore();
     getline(cin, s.foodnsnacks);
-    cout << "Enter drinks: ";
+    cout << "\nEnter drinks: ";
     getline(cin, s.drinks);
-    cout << "Enter rows: ";
+    cout << "\nEnter rows: ";
     cin >> s.rows;
-    cout << "Enter columns: ";
+    cout << "\nEnter columns: ";
     cin >> s.column;
 
     outfile << s.name << "\n" << s.minage << " " << s.price
@@ -228,7 +279,8 @@ void initializeSeating(int scheduleIndex, int rows, int columns)
 {
     if (rows < 0 || rows > MAX_ROWS || columns < 0 || columns > MAX_COLUMN)
     {
-        cout << "Invalid input for rows or columns.\n";
+        cout << "\n         error           \n";
+        cout << "\nInvalid input for rows or columns.\n";
         return;
     }
 
@@ -245,24 +297,25 @@ void initializeSeating(int scheduleIndex, int rows, int columns)
 
 void operatorpassword()
 {
+    showHeader();
     int password, actualpassword = 2468;
     string actfvrtfood = "biryani", actfvrtcar = "bentley";
     string fvrtfood, fvrtcar;
 
-    cout << "Enter your password: ";
+    cout << "\n Enter your password: ";
     cin >> password;
 
     if (password == actualpassword)
     {
-        cout << "Password correct.\n";
+        cout << "\nPassword correct.\n";
         reserveschedule();
     }
     else
     {
-        cout << "Forgot password? Try answering these questions.\n";
-        cout << "Your favorite food: ";
+        cout << "\nForgot password? Try answering these questions.\n";
+        cout << "\nYour favorite food: ";
         cin >> fvrtfood;
-        cout << "Your favorite car: ";
+        cout << "\nYour favorite car: ";
         cin >> fvrtcar;
 
         if (fvrtfood == actfvrtfood && fvrtcar == actfvrtcar)
@@ -271,7 +324,7 @@ void operatorpassword()
         }
         else
         {
-            cout << "Incorrect information.\n";
+            cout << "\nIncorrect information.\n";
         }
     }
 }
@@ -280,19 +333,26 @@ void reserveschedule()
 {
     if (scheduleCount == 0)
     {
-        cout << "No schedules available. Ask the manager to set up a schedule.\n";
+        cout << "\nNo schedules available. Ask the manager to set up a schedule.\n";
         return;
     }
 
     while (true)
     {
-        cout << "Available Schedules:\n";
+        showHeader();
+        
+        cout << "\n=========================================\n";
+        cout << "         AVAILABLE SCHEDULES             \n";
+        cout << "=========================================\n";
+
         for (int i = 0; i < scheduleCount; ++i)
         {
             cout << i + 1 << ". " << schedules[i].name << "\n";
         }
 
         cout << scheduleCount + 1 << ". Return to Main Menu\n";
+        cout <<  "--------------------------------------------------------------------\n";     cout << "Enter your choice: ";
+        cout <<  "\n";  
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
@@ -302,7 +362,7 @@ void reserveschedule()
 
         if (choice < 1 || choice > scheduleCount)
         {
-            cout << "Invalid choice. Try again.\n";
+            cout << "\nInvalid choice. Try again.\n";
             continue;
         }
 
@@ -310,10 +370,16 @@ void reserveschedule()
 
         while (true)
         {
+            showHeader();
+            
+            cout << "\n-----------------------------------------\n";
+            cout << "  Options for Schedule: " << schedules[scheduleIndex].name << "\n";
+            cout << "-----------------------------------------\n";
             cout << "1. View Seating Layout\n";
             cout << "2. Reserve a Seat\n";
             cout << "3. Cancel a Reservation\n";
             cout << "4. Return to Schedule Selection\n";
+            cout << "-------------------------------------------\n";
             cout << "Enter your choice: ";
             int opChoice;
             cin >> opChoice;
@@ -321,13 +387,22 @@ void reserveschedule()
             switch (opChoice)
             {
             case 1:
+               
+                showHeader();
                 displaySeating(scheduleIndex);
+                system("pause");
                 break;
             case 2:
+                
+                showHeader();
                 reserveSeat(scheduleIndex);
+                system("pause");
                 break;
             case 3:
+                
+                showHeader();
                 cancelSeat(scheduleIndex, -1);
+                system("pause");
                 break;
             case 4:
                 return;
@@ -353,7 +428,7 @@ bool checkGenderAdjacency(int scheduleIndex, int row, int col, char gender, int 
             char adjacent = seating[scheduleIndex][newRow][newCol];
             if ((gender == 'M' && adjacent == 'F') || (gender == 'F' && adjacent == 'M'))
             {
-                cout << "Cannot reserve adjacent to opposite gender seat.\n";
+                cout << "\nCannot reserve adjacent to opposite gender seat.\n\n\n";
                 return false;
             }
         }
@@ -364,25 +439,30 @@ bool checkGenderAdjacency(int scheduleIndex, int row, int col, char gender, int 
 
 void reserveSeat(int scheduleIndex)
 {
+    
+    showHeader();
+    cout << "\n==================================================\n";
+    cout << " \n             Reservation tab\n";
+     cout <<"\n==================================================\n";
     int row, col, userid;
     char gender;
-    cout << "Enter User ID: ";
+    cout << "\nEnter User ID: ";
     cin >> userid;
-    cout << "Enter your gender (M/F): ";
+    cout << "\nEnter your gender (M/F): ";
     cin >> gender;
     gender = toupper(gender);
-    cout << "Enter the row and column to reserve (1-" << schedules[scheduleIndex].rows << " for rows and 1-" << schedules[scheduleIndex].column << " for columns): ";
+    cout << "\nEnter the row and column to reserve (1-" << schedules[scheduleIndex].rows << " for rows and 1-" << schedules[scheduleIndex].column << " for columns): ";
     cin >> row >> col;
 
     if (row < 1 || row > schedules[scheduleIndex].rows || col < 1 || col > schedules[scheduleIndex].column)
     {
-        cout << "Invalid seat number.\n";
+        cout << "\nInvalid seat number.\n";
         return;
     }
 
     if (seating[scheduleIndex][row - 1][col - 1] != '*')
     {
-        cout << "Seat already reserved. Try again.\n";
+        cout << "\nSeat already reserved. Try again.\n\n";
         return;
     }
 
@@ -392,19 +472,19 @@ void reserveSeat(int scheduleIndex)
     }
 
     seating[scheduleIndex][row - 1][col - 1] = (gender == 'M') ? 'M' : 'F';
-    cout << "Seat reserved successfully!\n";
+    cout << "\nSeat reserved successfully!\n\n\n";
     saveSeating(scheduleIndex);
 }
 
 void cancelSeat(int scheduleIndex, int userid)
 {
     int row, col;
-    cout << "Enter row and column of the seat to cancel (1-" << schedules[scheduleIndex].rows << " for rows and 1-" << schedules[scheduleIndex].column << " for columns): ";
+    cout << "\nEnter row and column of the seat to cancel (1-" << schedules[scheduleIndex].rows << " for rows and 1-" << schedules[scheduleIndex].column << " for columns): ";
     cin >> row >> col;
 
     if (row < 1 || row > schedules[scheduleIndex].rows || col < 1 || col > schedules[scheduleIndex].column || seating[scheduleIndex][row - 1][col - 1] == '*')
     {
-        cout << "No reservation found at this seat.\n";
+        cout << "\nNo reservation found at this seat.\n";
         return;
     }
 
@@ -415,7 +495,7 @@ void cancelSeat(int scheduleIndex, int userid)
 
 void displaySeating(int scheduleIndex)
 {
-    cout << "Seating Layout for " << schedules[scheduleIndex].name << ":\n";
+    cout << "\nSeating Layout for " << schedules[scheduleIndex].name << ":\n";
     for (int i = 0; i < schedules[scheduleIndex].rows; ++i)
     {
         for (int j = 0; j < schedules[scheduleIndex].column; ++j)
@@ -434,7 +514,7 @@ void saveSeating(int scheduleIndex)
 
     if (!ffile)
     {
-        cout << "Error opening seating layout file.\n";
+        cout << "\nError opening seating layout file.\n";
         return;
     }
 
